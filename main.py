@@ -2,4 +2,4 @@ import os
 
 os.system("clear")
 
-print("Welcome to the HardCore Code")
+print("Welcome to HardCore Code INC.")
