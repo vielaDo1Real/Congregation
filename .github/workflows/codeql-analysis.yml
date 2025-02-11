@@ -2,27 +2,24 @@ name: CodeQL Analysis
 
 on:
   push:
-    branches: [main]
+    branches: 
+      - main
   pull_request:
-    branches: [main]
+    branches:
+      - main
 
 jobs:
   analyze:
-    name: Analyze code with CodeQL
     runs-on: ubuntu-latest
-
+    name: Analyze code with CodeQL
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
-      
+        uses: actions/checkout@v4
+
       - name: Set up CodeQL
         uses: github/codeql-action/setup@v2
 
-      - name: Auto build
-        run: |
-          python3 -m venv venv
-          source venv/bin/activate
-          pip install -r requirements.txt
-      
-      - name: Run CodeQL analysis
+      - name: Analyze code with CodeQL
         uses: github/codeql-action/analyze@v2
+        with:
+          category: 'security'
