@@ -1,0 +1,123 @@
+<h1 id="bitcoin-core">Bitcoin Core</h1>
+<h3 id="atualize-o-sistema">Atualize o sistema:</h3>
+<pre><code>sudo apt update
+sudo apt upgrade -y</code></pre>
+<h3 id="baixe-o-bitcoin-core">Baixe o Bitcoin Core:</h3>
+<pre><code>wget https://bitcoincore.org/bin/bitcoin-core-28.1/bitcoin-28.1-x86_64-linux-gnu.tar.gz</code></pre>
+<h3 id="verifique-a-integridade-do-arquivo">Verifique a integridade do
+arquivo:</h3>
+<pre><code>wget https://bitcoincore.org/bin/bitcoin-core-28.1/SHA256SUMS
+wget https://bitcoincore.org/bin/bitcoin-core-28.1/SHA256SUMS.asc</code></pre>
+<h3 id="verifique-a-assinatura-pgp">Verifique a assinatura PGP:</h3>
+<p>Importe a chave PGP do desenvolvedor:</p>
+<pre><code>gpg --keyserver hkps://keyserver.ubuntu.com --recv-keys 01EA5486DE18A882D4C2684590C8019E36C2E964</code></pre>
+<p>Verifique a assinatura:</p>
+<pre><code>gpg --verify SHA256SUMS.asc SHA256SUMS</code></pre>
+<p>Checksum do arquivo baixado:</p>
+<pre><code>sha256sum --check SHA256SUMS</code></pre>
+<h3 id="extraia-o-arquivo-baixado">Extraia o arquivo baixado:</h3>
+<pre><code>tar -xzf bitcoin-28.1-x86_64-linux-gnu.tar.gz</code></pre>
+<h3 id="configurações">Configurações:</h3>
+<pre><code>mkdir -p ~/.bitcoin
+nano ~/.bitcoin/bitcoin.conf</code></pre>
+<p>Configuração inicial ~/.bitcoin/bitcoin.conf:</p>
+<pre><code># Permite que o Bitcoin Core atue como um servidor (prune = quantidade máxima disponível para alocação dos blocos em MB)
+server=1
+prune=61440
+
+# Configuração RPC para comunicação via API
+rpcbind=0.0.0.0
+rpcallowip=0.0.0.0/0
+rpcauth=seu_usuário:sua_senha_hash
+rpcport=8332
+rpcthreads=4
+rpcworkqueue=64
+
+# Ativa o índice completo de transações para consultas rápidas (não funciona em modo prune)
+txindex=0
+
+# Força a reindexação da blockchain
+reindex=1
+
+# Otimizações de rede (peers, transações e custo min cobrado para retransmissão)
+maxconnections=1000
+mempoolexpiry=72    
+minrelaytxfee=0.00001
+
+# Ajustes de desempenho (disco e threads)
+dbcache=300
+par=10
+
+# Configuração ZeroMQ para melhor streaming de eventos
+zmqpubrawtx=tcp://0.0.0.0:2833
+zmqpubrawblock=tcp://0.0.0.0:2833
+zmqpubhashtx=tcp://0.0.0.0:2833
+zmqpubhashblock=tcp://0.0.0.0:2833</code></pre>
+<p>Configuração inicial do arquivo
+/etc/systemd/system/bitcoind.service:</p>
+<pre><code>[Unit]
+Description=Bitcoin daemon
+After=network.target
+
+[Service]
+ExecStart=/usr/local/bin/bitcoind -conf=/home/&lt;USER&gt;/.bitcoin/bitcoin.conf -pid=/home/&lt;USER&gt;/.bitcoin/bitcoind.pid
+User=seu_user_linux
+Group=seu_grupo_linux
+Type=simple
+WorkingDirectory=/home/nofx/.bitcoin
+PIDFile=/home/nofx/.bitcoin/bitcoind.pid
+Restart=on-failure
+RestartSec=10s
+LimitNOFILE=50000
+
+[Install]
+WantedBy=multi-user.target</code></pre>
+<h3 id="restar-bitcoin-core">Restar Bitcoin Core:</h3>
+<pre><code>bitcoind -daemon</code></pre>
+<h3 id="configurar-o-port-forwarding-no-windows">Configurar o port
+forwarding no Windows</h3>
+<p>Encaminhar a porta 8332 do WSL2 para a rede externa</p>
+<pre><code>netsh interface portproxy add v4tov4 listenaddress=0.0.0.0 listenport=8332 connectaddress=172.22.224.1 connectport=8332</code></pre>
+<p>Verifique o IP do WSL2 com:</p>
+<pre><code>ip -4 addr show eth0 | grep inet</code></pre>
+<p>Abrir a porta no firewall do Windows Execute no PowerShell
+(Admin):</p>
+<pre><code>New-NetFirewallRule -DisplayName &quot;Bitcoin RPC&quot; -Direction Inbound -Protocol TCP -LocalPort 8332 -Action Allow</code></pre>
+<h3 id="comandos-relacionados-ao-gerenciameno-de-sincronização">Comandos
+relacionados ao gerenciameno de sincronização:</h3>
+<pre><code># Reiniciar o Bitcoin Core
+sudo systemctl restart bitcoind
+
+# Monitorar a taxa de download
+sudo iftop -i eth0
+
+# Inicia reindexação forçada
+bitcoind -reindex
+
+# Informações gerais (mais dinâmica)
+bitcoin-cli -getinfo
+
+# Informações gerais
+bitcoin-cli getblockchaininfo (mais detalhada)
+
+# Acompanhar log em tempo real
+tail -f ~/.bitcoin/debbug.log
+
+# innformações simplificadas do progresso de sincronização (atualizada a cada 10 segundos)
+while true; do
+    clear
+    echo &quot;Monitorando Blockchain Info...&quot;
+    bitcoin-cli getblockchaininfo | grep -E &#39;blocks|verificationprogress&#39; | awk &#39;{print $1, $2}&#39;
+    sleep 10
+done 
+
+# Verificar a integridade da blockchain local
+bitcoin-cli verifychain
+
+# Você pode especificar dois parâmetros opcionais:
+
+# checklevel: Define o nível de verificação (padrão: 3).
+# nblocks: Número de blocos a verificar a partir do topo da cadeia (padrão: 6).
+
+# Verifica os últimos 100 blocos
+bitcoin-cli verifychain 4 100</code></pre>

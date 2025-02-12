@@ -1,0 +1,29 @@
+name: Update Documentation
+
+on:
+  push:
+    paths:
+      - 'docs/**/*.md'  # Monitora alterações em arquivos .md dentro de /docs
+  workflow_dispatch:  # Permite execução manual
+
+jobs:
+  convert_docs:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout do repositório
+        uses: actions/checkout@v4
+
+      - name: Instalar dependências
+        run: sudo apt update && sudo apt install -y pandoc
+
+      - name: Executar script de conversão
+        run: chmod +x docs/update_docs.sh && ./docs/update_docs.sh
+
+      - name: Commit e push dos arquivos convertidos
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add docs/converted/*.html docs/converted/*.pdf
+          git commit -m "Atualização automática da documentação convertida" || echo "Nenhuma mudança para commitar"
+          git push

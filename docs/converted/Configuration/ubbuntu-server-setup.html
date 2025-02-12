@@ -1,0 +1,33 @@
+<h1 id="ubuntu-server-wsl2">Ubuntu Server (WSL2)</h1>
+<h3 id="wsl">WSL:</h3>
+<pre><code>wsl --install
+wsl --list --verbose
+wsl --set-default-version 2</code></pre>
+<h3 id="acessar-instância">Acessar instância:</h3>
+<pre><code>wsl -d Ubuntu</code></pre>
+<h3 id="updateupgrade">Update/Upgrade</h3>
+<pre><code>sudo apt update &amp;&amp; sudo apt upgrade -y
+sudo apt autoremove -y</code></pre>
+<h3 id="removendo-pacotes">Removendo pacotes:</h3>
+<pre><code>sudo apt remove --purge ubuntu-desktop -y
+sudo apt autoremove -y
+sudo apt autoclean</code></pre>
+<h3 id="mantendo-pacotes-essenciais">Mantendo pacotes essenciais:</h3>
+<pre><code>sudo apt install --no-install-recommends ubuntu-minimal -y</code></pre>
+<h3 id="pacotes-recomendados">Pacotes recomendados:</h3>
+<pre><code>sudo apt install -y net-tools openssh-server tmux htop curl wget ufw iftop jq pandoc</code></pre>
+<h3 id="openssh">OpenSSH</h3>
+<pre><code>sudo systemctl enable ssh
+sudo systemctl start ssh</code></pre>
+<h3 id="ajustesconfiguração-de-rede">Ajustes/configuração de rede:</h3>
+<p>Testar conectividade:</p>
+<pre><code>curl -I http://google.com
+sudo ufw status</code></pre>
+<p>Caso o WSL Pro esteja ativo:</p>
+<pre><code>sudo systemctl disable wsl-pro.service --now</code></pre>
+<p>Ativação do firewall:</p>
+<pre><code>do ufw enable
+sudo ufw allow OpenSSH
+sudo ufw allow 80/tcp  # Caso queira rodar um servidor web futuramente
+sudo ufw allow 443/tcp  # Para HTTPS
+sudo ufw status verbose</code></pre>
