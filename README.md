@@ -24,9 +24,9 @@ Congregation é um projeto que consiste em uma API RPC privada, Transaction Boos
     FastAPI + uvicorn
 
 - **Desenvolvimento:**
-    WSL2 + Ubuntu Server
-    VS Code + WSL
-    Ambiente Virtual Python
+    WSL2 + Ubuntu Server,
+    VS Code + WSL,
+    Ambiente Virtual Python,
     MongoDB + PostgreSQL
 
 ## Componentes Principais
