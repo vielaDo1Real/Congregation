@@ -3,17 +3,6 @@
 ## Visão Geral
 Congregation é um projeto que consiste em uma API RPC privada, Transaction Boosting e um Nó Lightning. Ele visa oferecer serviços otimizados para interações com a blockchain do Bitcoin, fornecendo um meio eficiente de retransmissão de transações e pagamentos instantâneos.
 
-## Infraestrutura (desenvolvimento)
-- **Hardware:** 
-    Notebook Sony VAIO FE14 (2021)
-    NVMe CL1-8D256  256 GB (256052966400)
-    Memória física 8 GB (8589934592)
-
-- **Armazenamento:**
-    60 GB livres em NVMe
-- **Sistema Operacional:**
-    Windows 11 Home + WSL2 (Ubuntu Server)
-
 - **Conectividade:** 
     Internet 15 MB/s
 
