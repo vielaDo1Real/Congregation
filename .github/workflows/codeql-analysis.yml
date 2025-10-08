@@ -27,6 +27,6 @@ jobs:
         repository: vielaDo1Real/Congregation
 
     - name: Initialize CodeQL
-      uses: github/codeql-action/init@v3
+      uses: github/codeql-action/init@v4
       with:
         languages: python
