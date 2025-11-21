@@ -12,7 +12,7 @@ jobs:
 
     steps:
       - name: Checkout do repositório
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Instalar dependências
         run: sudo apt update && sudo apt install -y pandoc
